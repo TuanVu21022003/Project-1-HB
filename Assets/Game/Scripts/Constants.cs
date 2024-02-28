@@ -5,6 +5,7 @@ using UnityEngine;
 public class KeyConstants
 {
     public static string KEY_BRICK = "Brick";
+    public static string KEY_YELLOWPLANE = "Yellow";
 }
 
 public class PathConstants
