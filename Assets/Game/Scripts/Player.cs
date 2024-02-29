@@ -59,7 +59,7 @@ public class Player : MonoBehaviour
     public void AddBrickPlayer()
     {
         countBrickPlayer++;
-        Debug.Log(countBrickPlayer);
+        
     }
 
     public void AddBrickGround()
@@ -82,8 +82,17 @@ public class Player : MonoBehaviour
     public void RemoveBrickPlayer()
     {
         countBrickPlayer--;
-        Debug.Log(countBrickPlayer);
+        
 
+    }
+
+    public void ClearBrick()
+    {
+        while(countBrickPlayer > 0)
+        {
+            RemoveBrick();
+            Debug.Log(countBrickPlayer);
+        }
     }
 
     public void RemoveBrickGround()
@@ -146,7 +155,7 @@ public class Player : MonoBehaviour
     {
         if (isControl == false)
         {
-            Debug.Log("Khong vuot duoc");
+            
             return;
         }
         if (Input.GetMouseButtonDown(0))
@@ -170,6 +179,7 @@ public class Player : MonoBehaviour
                         direction = Vector3.right;
                         currentPosCast = transform.position + new Vector3(0, distanceRay, 0);
                         isPosStop = false;
+                        Debug.Log(direction);
                     }
                     else
                     {
@@ -177,6 +187,7 @@ public class Player : MonoBehaviour
                         direction = Vector3.left;
                         currentPosCast = transform.position + new Vector3(0, distanceRay, 0);
                         isPosStop = false;
+                        Debug.Log(direction);
                     }
                 }
                 else
@@ -187,6 +198,7 @@ public class Player : MonoBehaviour
                         direction = Vector3.forward;
                         currentPosCast = transform.position + new Vector3(0, distanceRay, 0);
                         isPosStop = false;
+                        Debug.Log(direction);
                     }
                     else
                     {
@@ -194,6 +206,7 @@ public class Player : MonoBehaviour
                         direction= Vector3.back;
                         currentPosCast = transform.position + new Vector3(0, distanceRay, 0);
                         isPosStop = false;
+                        Debug.Log(direction);
                     }
                 }
             }
@@ -208,7 +221,7 @@ public class Player : MonoBehaviour
         //}
         SetDirection();
         
-        //Debug.Log(direction);
+        Debug.Log(isPosStop);
         if(isPosStop == false)
         {
             GameObject g = ObjectPooling.instance.getObject(startRayPrefab.gameObject);
@@ -229,9 +242,9 @@ public class Player : MonoBehaviour
         }
         if(countBrickPlayer > 0)
         {
-            
 
             transform.position = Vector3.MoveTowards(transform.position, posStop, speed * Time.deltaTime);
+
          
             if(lastPosition != transform.position)
             {
@@ -255,7 +268,7 @@ public class Player : MonoBehaviour
 
     public void ChangAnim(string animName)
     {
-        Debug.Log(currentAnim + " " + animName);
+
         if(currentAnim != animName)
         {
             anim.ResetTrigger(currentAnim);
@@ -278,6 +291,29 @@ public class Player : MonoBehaviour
                 other.gameObject.GetComponent<MeshRenderer>().enabled = false;
             }
             ChangAnim("Win");
+            listBricksReceive.SetActive(false);
+            playerVisual.localPosition = new Vector3(0, 0, 0.28f);
+            
+        }
+        if(other.gameObject.tag == "Push")
+        {
+            Debug.Log("da cham push");
+            Vector3 directionOption = Vector3.Cross(direction, Vector3.up).normalized;
+            if(directionOption == -other.gameObject.transform.right || directionOption == -other.gameObject.transform.forward)
+            {
+                direction = directionOption;
+            }
+            else
+            {
+                direction = -directionOption;
+
+            }
+            Debug.Log(direction);
+            isPosStop = false;
+            currentPosCast = new Vector3(other.gameObject.transform.localPosition.x, transform.position.y , other.gameObject.transform.localPosition.z) + new Vector3(0, distanceRay, 0);
         }
     }
+
+    
+
 }
